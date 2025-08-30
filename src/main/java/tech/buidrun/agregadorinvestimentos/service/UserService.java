@@ -22,20 +22,30 @@ public class UserService {
 	}
 
 	public UUID createUser(CreateUserDto createUserDto) {
-
+    
 		// DTO -> ENTITY
 		// idUser se não for null dá erro ao salvar
 		// UUID idUser = UUID.randomUUID();
 		UUID idUser = null;
 		String userName = createUserDto.username();
 		String email = createUserDto.email();
+	//	String email = null;
+		
+			
 		String password = createUserDto.password();
 
-		var entity = new User(idUser, userName, email, password, Instant.now(), null);
+		var entity = new User(idUser,
+				              userName,
+				              email,
+				              password,
+				              Instant.now(),
+				              null);
 
 		var userSaved = userRepository.save(entity);
 		return userSaved.getUserId();
-
+     
+    
+    
 	}
 
 	public Optional<User> getUserById(String userId) {
@@ -47,7 +57,7 @@ public class UserService {
 	public List<User> listUsers() {
 		return userRepository.findAll();
 	}
-
+ 
 	public void deleteById(String userId) {
 
 		var id = UUID.fromString(userId);
