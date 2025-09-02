@@ -26,8 +26,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import tech.buidrun.agregadorinvestimentos.controller.CreateUserDto;
-import tech.buidrun.agregadorinvestimentos.controller.UpdateUserDto;
+import tech.buidrun.agregadorinvestimentos.controller.dto.CreateUserDto;
+import tech.buidrun.agregadorinvestimentos.controller.dto.UpdateUserDto;
 import tech.buidrun.agregadorinvestimentos.entity.User;
 import tech.buidrun.agregadorinvestimentos.repository.UserRepository;
 

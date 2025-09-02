@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import tech.buidrun.agregadorinvestimentos.controller.dto.CreateAccountDto;
+import tech.buidrun.agregadorinvestimentos.controller.dto.CreateUserDto;
+import tech.buidrun.agregadorinvestimentos.controller.dto.UpdateUserDto;
 import tech.buidrun.agregadorinvestimentos.entity.User;
 import tech.buidrun.agregadorinvestimentos.service.UserService;
 
@@ -66,6 +69,14 @@ public class UserController {
 	
 	@DeleteMapping("/{userId}")
 	public ResponseEntity<Void> deleteById(@PathVariable("userId") String userId) {
+		userService.deleteById(userId);
+		return ResponseEntity.noContent().build();
+		
+	}
+	
+	@PostMapping("/{userId}/accounts")
+	public ResponseEntity<Void> deleteById(@PathVariable("userId") String userId,
+			@RequestBody CreateAccountDto createAccountDto) {
 		userService.deleteById(userId);
 		return ResponseEntity.noContent().build();
 		
