@@ -1,6 +1,7 @@
 package tech.buidrun.agregadorinvestimentos.entity;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 
@@ -38,7 +40,10 @@ public class User {
 	private Instant updatedTimestamp;
 	
 	
-	
+	// indica que o mappedBy foi feito pelo campo "user" da classe account
+	// um usuario tem varias contas que estao vinculadas pelo campo user
+	@OneToMany(mappedBy="user") // um usuario possui varias contas
+	private List<Account> accounts;
 
 	public User() {
 		
@@ -102,6 +107,14 @@ public class User {
 
 	public void setUpdatedTimestamp(Instant updatedTimestamp) {
 		this.updatedTimestamp = updatedTimestamp;
+	}
+
+	public List<Account> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(List<Account> accounts) {
+		this.accounts = accounts;
 	}
 	
 	
