@@ -77,8 +77,10 @@ public class UserController {
 	@PostMapping("/{userId}/accounts")
 	public ResponseEntity<Void> deleteById(@PathVariable("userId") String userId,
 			@RequestBody CreateAccountDto createAccountDto) {
-		userService.deleteById(userId);
-		return ResponseEntity.noContent().build();
+		//userService.deleteById(userId);
+		userService.createAccount(userId,createAccountDto);
+		//return ResponseEntity.noContent().build();
+		return ResponseEntity.ok().build();
 		
 	}
 	

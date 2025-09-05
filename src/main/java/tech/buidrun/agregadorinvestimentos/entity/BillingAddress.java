@@ -2,6 +2,7 @@ package tech.buidrun.agregadorinvestimentos.entity;
 
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -18,7 +19,7 @@ public class BillingAddress {
 	@Column(name="account_id") // precisa ser igual ao nome do @JoinColumn
 	private UUID id;
 	
-	@OneToOne // um endereço de cobrança é relacionado a uma conta
+	@OneToOne(cascade = CascadeType.ALL) // um endereço de cobrança é relacionado a uma conta
 	@MapsId // indica para o hibernate que ele vai pegar o identificador da entidade Account
 	@JoinColumn(name="account_id") // é uma FK de uma outra tabela
 	private Account account;
@@ -34,12 +35,15 @@ public class BillingAddress {
 		// TODO Auto-generated constructor stub
 	}
 
-	public BillingAddress(UUID id, String street, Integer number) {
+
+	public BillingAddress(UUID id, Account account, String street, Integer number) {
 	
 		this.id = id;
+		this.account = account;
 		this.street = street;
 		this.number = number;
 	}
+
 
 	public UUID getId() {
 		return id;

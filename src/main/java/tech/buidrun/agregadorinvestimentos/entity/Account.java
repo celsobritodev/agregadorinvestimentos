@@ -3,6 +3,7 @@ package tech.buidrun.agregadorinvestimentos.entity;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +31,7 @@ public class Account {
 	@JoinColumn(name="user_id") // coluna FK referenciando a tabela de usuarios
 	private User user;
 	
-	@OneToOne(mappedBy="account") // indica o campo dentro da enttidade BillingAddress
+	@OneToOne(mappedBy="account", cascade = CascadeType.ALL) // indica o campo dentro da enttidade BillingAddress
 	@PrimaryKeyJoinColumn // passando a primary key da entridde account para a tabela de BillingAddress
 	private BillingAddress billingAddress;
 	
@@ -48,10 +49,14 @@ public class Account {
 	}
 
 
-	public Account(UUID accountId, String description) {
-	
+	public Account(UUID accountId, User user, BillingAddress billingAddress, String description,
+			List<AccountStock> accountStocks) {
+
 		this.accountId = accountId;
+		this.user = user;
+		this.billingAddress = billingAddress;
 		this.description = description;
+		this.accountStocks = accountStocks;
 	}
 
 

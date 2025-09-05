@@ -1,51 +1,61 @@
 package tech.buidrun.agregadorinvestimentos.service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import tech.buidrun.agregadorinvestimentos.controller.dto.CreateAccountDto;
 import tech.buidrun.agregadorinvestimentos.controller.dto.CreateUserDto;
 import tech.buidrun.agregadorinvestimentos.controller.dto.UpdateUserDto;
+import tech.buidrun.agregadorinvestimentos.entity.Account;
+import tech.buidrun.agregadorinvestimentos.entity.BillingAddress;
 import tech.buidrun.agregadorinvestimentos.entity.User;
+import tech.buidrun.agregadorinvestimentos.repository.AccountRepository;
+import tech.buidrun.agregadorinvestimentos.repository.BillingAddressRepository;
 import tech.buidrun.agregadorinvestimentos.repository.UserRepository;
 
 @Service
 public class UserService {
 
+	// injetando
 	private UserRepository userRepository;
+	// injetando
+	private AccountRepository accountRepository;
+	// injetando
+	private BillingAddressRepository billingAddressRepository;
 
-	public UserService(UserRepository userRepository) {
+	
+	public UserService(UserRepository userRepository, AccountRepository accountRepository,
+			BillingAddressRepository billingAddressRepository) {
+		super();
 		this.userRepository = userRepository;
+		this.accountRepository = accountRepository;
+		this.billingAddressRepository = billingAddressRepository;
 	}
 
 	public UUID createUser(CreateUserDto createUserDto) {
-    
+
 		// DTO -> ENTITY
 		// idUser se não for null dá erro ao salvar
 		// UUID idUser = UUID.randomUUID();
 		UUID idUser = null;
 		String userName = createUserDto.username();
 		String email = createUserDto.email();
-	//	String email = null;
-		
-			
+		// String email = null;
+
 		String password = createUserDto.password();
 
-		var entity = new User(idUser,
-				              userName,
-				              email,
-				              password,
-				              Instant.now(),
-				              null);
+		var entity = new User(idUser, userName, email, password, Instant.now(), null);
 
 		var userSaved = userRepository.save(entity);
 		return userSaved.getUserId();
-     
-    
-    
+
 	}
 
 	public Optional<User> getUserById(String userId) {
@@ -57,7 +67,7 @@ public class UserService {
 	public List<User> listUsers() {
 		return userRepository.findAll();
 	}
- 
+
 	public void deleteById(String userId) {
 
 		var id = UUID.fromString(userId);
@@ -68,6 +78,34 @@ public class UserService {
 			userRepository.deleteById(id);
 		}
 
+	}
+
+	public void createAccount(String userId, CreateAccountDto createAccountDto) {
+		// verificano se usuario existe ante de fazer a relação
+		var user = userRepository.findById(UUID.fromString(userId)) // se usuario nao existe gera excessao
+		              .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));// findById retorna Optional<>
+		
+		// convertendo DTO -> ENTITY
+		var account = new Account(
+				null, // antes era UUID.randomUUID que gera uma excessão
+				user,
+				null,
+				createAccountDto.description(),
+				new ArrayList<>()
+				);
+		
+		var accountCreated = accountRepository.save(account);
+		
+		var billingAddress = new BillingAddress (
+				accountCreated.getAccountId(),
+				account,
+				createAccountDto.street(),
+				createAccountDto.number()
+				);
+		
+		billingAddressRepository.save(billingAddress);
+				
+		
 	}
 
 	public void updateUserById(String userId, UpdateUserDto updateUserDto) {
@@ -86,7 +124,7 @@ public class UserService {
 			if (updateUserDto.password() != null) {
 				user.setPassword(updateUserDto.password());
 			}
-			
+
 			userRepository.save(user);
 
 		}
