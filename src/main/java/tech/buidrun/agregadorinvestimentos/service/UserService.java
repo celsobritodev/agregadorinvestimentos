@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import tech.buidrun.agregadorinvestimentos.controller.dto.AccountResponseDto;
 import tech.buidrun.agregadorinvestimentos.controller.dto.CreateAccountDto;
 import tech.buidrun.agregadorinvestimentos.controller.dto.CreateUserDto;
 import tech.buidrun.agregadorinvestimentos.controller.dto.UpdateUserDto;
@@ -21,13 +24,19 @@ import tech.buidrun.agregadorinvestimentos.repository.BillingAddressRepository;
 import tech.buidrun.agregadorinvestimentos.repository.UserRepository;
 
 @Service
+@Transactional // DEEPSEEK
 public class UserService {
 
 	// injetando
+	@Autowired // DEEPSEEK
 	private UserRepository userRepository;
+	
 	// injetando
+	@Autowired // DEEPSEEK
 	private AccountRepository accountRepository;
+	
 	// injetando
+	@Autowired // DEEPSEEK
 	private BillingAddressRepository billingAddressRepository;
 
 	
@@ -85,7 +94,7 @@ public class UserService {
 		var user = userRepository.findById(UUID.fromString(userId)) // se usuario nao existe gera excessao
 		              .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));// findById retorna Optional<>
 		
-		// convertendo DTO -> ENTITY
+		// convertendo DTO -> ENTITY  / CRIA A CONTA PRIMEIRO
 		var account = new Account(
 				null, // antes era UUID.randomUUID que gera uma excessão
 				user,
@@ -97,12 +106,17 @@ public class UserService {
 		var accountCreated = accountRepository.save(account);
 		
 		var billingAddress = new BillingAddress (
-				accountCreated.getAccountId(),
-				account,
+				//accountCreated.getAccountId(),
+				null, // DEEPSEEK
+				//account,
+				accountCreated, // DEEPSEEK
 				createAccountDto.street(),
 				createAccountDto.number()
 				);
 		
+
+		
+		// Salvar o billingAddress
 		billingAddressRepository.save(billingAddress);
 				
 		
@@ -129,6 +143,16 @@ public class UserService {
 
 		}
 
+	}
+
+	public List<AccountResponseDto> listAccounts(String userId) {
+		// verificano se usuario existe ante de fazer a relação
+		var user = userRepository.findById(UUID.fromString(userId)) // se usuario nao existe gera excessao
+				              .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));// findById retorna Optional<>
+		return user.getAccounts()
+		 .stream()
+		 .map(ac-> new AccountResponseDto(ac.getAccountId().toString(),ac.getDescription()))
+		 .toList();
 	}
 
 }

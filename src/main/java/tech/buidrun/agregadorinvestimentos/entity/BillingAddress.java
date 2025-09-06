@@ -68,6 +68,16 @@ public class BillingAddress {
 	public void setNumber(Integer number) {
 		this.number = number;
 	}
+
+
+	public Account getAccount() {
+		return account;
+	}
+
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
 	
 	
 	
