@@ -23,7 +23,7 @@ public class AccountStockId {
 	}
 
 	public AccountStockId(UUID accountId, String stockId) {
-		super();
+
 		this.accountId = accountId;
 		this.stockId = stockId;
 	}
