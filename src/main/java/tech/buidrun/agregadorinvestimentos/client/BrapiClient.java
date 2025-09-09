@@ -16,7 +16,7 @@ public interface BrapiClient {
 	
 	@GetMapping(value="/api/quote/{stockId}")
 	BrapiResponseDto getQuote(@RequestParam("token") String token,
-   		                      @PathVariable("totckId") String stockId);
+   		                      @PathVariable("stockId") String stockId);
 	
 
 }

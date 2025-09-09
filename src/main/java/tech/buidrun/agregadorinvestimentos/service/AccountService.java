@@ -20,7 +20,7 @@ import tech.buidrun.agregadorinvestimentos.repository.StockRepository;
 @Service
 public class AccountService {
 	
-	@Value("#{environment.TOKEN}")
+	@Value("#{environment.TOKEN}") // vai referenciar a variavel de ambiente
 	private String TOKEN;
 	
 	private AccountRepository accountRepository;
