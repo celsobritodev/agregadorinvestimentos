@@ -39,7 +39,8 @@ public class User {
 	@UpdateTimestamp
 	private Instant updatedTimestamp;
 	
-	
+	// 1:N um usuario pode ter varias contas
+	// o mappedBy sempre vai para o lado 1 da relacao
 	// indica que o mappedBy foi feito pelo campo "user" da classe account
 	// um usuario tem varias contas que estao vinculadas pelo campo user
 	@OneToMany(mappedBy="user") // um usuario possui varias contas
@@ -109,6 +110,8 @@ public class User {
 		this.updatedTimestamp = updatedTimestamp;
 	}
 
+	
+	// um usuario possui varias contas
 	public List<Account> getAccounts() {
 		return accounts;
 	}

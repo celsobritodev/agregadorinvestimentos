@@ -19,6 +19,7 @@ public class BillingAddress {
 	@Column(name="account_id") // precisa ser igual ao nome do @JoinColumn
 	private UUID id;
 	
+	// 1:1 um endereço de cobrança está relacionado a uma unica conta
 	@OneToOne(cascade = CascadeType.ALL) // um endereço de cobrança é relacionado a uma conta
 	@MapsId // indica para o hibernate que ele vai pegar o identificador da entidade Account
 	@JoinColumn(name="account_id") // é uma FK de uma outra tabela

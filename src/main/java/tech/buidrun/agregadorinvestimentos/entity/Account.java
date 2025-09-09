@@ -25,27 +25,31 @@ public class Account {
 	@GeneratedValue(strategy=GenerationType.UUID)
 	private UUID accountId;
 	
-	@ManyToOne // varias contas tem um unico usuario
+	// 1:N muitas contas para um usuario
+	// varias contas estao relacionadas a um unico usuario
+	@ManyToOne 
 	// indica que quando criar a tabela "tb_accounts" sera criada uma coluna de
 	// "user_id" que será a chave estrangeira da tabela de usuarios
 	@JoinColumn(name="user_id") // coluna FK referenciando a tabela de usuarios
 	private User user;
 	
-	@OneToOne(mappedBy="account", cascade = CascadeType.ALL) // indica o campo dentro da enttidade BillingAddress
-	@PrimaryKeyJoinColumn // passando a primary key da entridde account para a tabela de BillingAddress
+	
+	//1:1 um endereço de cobrança está relacionado a uma unica conta
+	@OneToOne(mappedBy="account", cascade = CascadeType.ALL) // indica o campo dentro da entidade BillingAddress
+	@PrimaryKeyJoinColumn // passando a primary key da entidade account para a tabela de BillingAddress
 	private BillingAddress billingAddress;
 	
 	
 	@Column(name="description")
 	private String description;
 	
+	// 1:N uma conta pode ter varios stocks
 	@OneToMany(mappedBy="account")
 	private List<AccountStock> accountStocks;
 
 
 	public Account() {
 	
-		// TODO Auto-generated constructor stub
 	}
 
 
